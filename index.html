@@ -105,6 +105,8 @@
     .button:focus-visible { outline: 3px solid #fff; outline-offset: 4px; }
     .button.primary { background: var(--accent); border-color: var(--accent); }
     .button.primary:hover { background: #e9006e; border-color: #e9006e; }
+    .button[aria-disabled="true"] { cursor: default; }
+    .button[aria-disabled="true"]:hover { transform: none; background: var(--accent); border-color: var(--accent); }
 
     .portrait-wrap {
       justify-self: end;
@@ -171,8 +173,8 @@
           <strong>physical Keycard</strong>. No cloud. No accounts. No compromise.
         </p>
         <div class="actions">
-          <a class="button primary" href="https://github.com/xAlisher/encrypt-everything-android">Get the app</a>
-          <a class="button" href="https://github.com/xAlisher/encrypt-everything-android">GitHub</a>
+          <span class="button primary" aria-disabled="true">Coming soon</span>
+          <a class="button" href="https://github.com/xAlisher/encrypt-everything-promo">GitHub</a>
         </div>
       </div>
 
@@ -183,7 +185,7 @@
 
     <footer>
       <span>Your files. Your card. Your keys.</span>
-      <a href="https://github.com/xAlisher/encrypt-everything-android">Open source on GitHub</a>
+      <a href="https://github.com/xAlisher/encrypt-everything-promo">Open source on GitHub</a>
     </footer>
   </main>
 </body>
