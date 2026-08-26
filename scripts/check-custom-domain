@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+# Verify DNS and HTTPS readiness before activating the GitHub Pages custom domain.
+set -euo pipefail
+
+DOMAIN="${1:-encrypteverything.tech}"
+EXPECTED_A=(185.199.108.153 185.199.109.153 185.199.110.153 185.199.111.153)
+EXPECTED_AAAA=(2606:50c0:8000::153 2606:50c0:8001::153 2606:50c0:8002::153 2606:50c0:8003::153)
+EXPECTED_WWW="xalisher.github.io."
+
+mapfile -t actual_a < <(dig +short "$DOMAIN" A | sort -u)
+mapfile -t actual_aaaa < <(dig +short "$DOMAIN" AAAA | sort -u)
+actual_www="$(dig +short "www.$DOMAIN" CNAME | sort -u)"
+mapfile -t expected_a < <(printf '%s\n' "${EXPECTED_A[@]}" | sort -u)
+mapfile -t expected_aaaa < <(printf '%s\n' "${EXPECTED_AAAA[@]}" | sort -u)
+
+ready=true
+if [[ "${actual_a[*]}" != "${expected_a[*]}" ]]; then
+  printf 'A records not ready. Current: %s\n' "${actual_a[*]:-(none)}" >&2
+  ready=false
+fi
+if [[ "${actual_aaaa[*]}" != "${expected_aaaa[*]}" ]]; then
+  printf 'AAAA records not ready. Current: %s\n' "${actual_aaaa[*]:-(none)}" >&2
+  ready=false
+fi
+if [[ "$actual_www" != "$EXPECTED_WWW" ]]; then
+  printf 'www CNAME not ready. Current: %s\n' "${actual_www:-(none)}" >&2
+  ready=false
+fi
+
+if [[ "$ready" != true ]]; then
+  echo 'custom domain pending DNS changes' >&2
+  exit 2
+fi
+
+body="$(curl --fail --silent --show-error --location --max-time 30 "https://$DOMAIN/")"
+grep -q '<title>Encrypt Everything</title>' <<<"$body" || {
+  echo 'HTTPS is live but the expected site title is missing' >&2
+  exit 1
+}
+echo "custom domain DNS and HTTPS are live: https://$DOMAIN/"

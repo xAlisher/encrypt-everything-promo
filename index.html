@@ -112,10 +112,9 @@
       font-weight: 700;
       letter-spacing: -0.02em;
       text-decoration: none;
-      transition: transform 160ms ease, background 160ms ease;
+      transition: background 160ms ease;
     }
 
-    .button:hover { transform: translateY(-2px); }
     .button:focus-visible { outline: 3px solid #fff; outline-offset: 4px; }
     .button.primary { background: var(--accent); }
     .button.primary:hover { background: #e9006e; }
@@ -187,7 +186,7 @@
           keystore — external hardware only you control.
         </p>
         <div class="actions">
-          <span class="button primary" aria-disabled="true">Get it on F-Droid</span>
+          <a class="button primary" href="https://xalisher.github.io/fdroid/repo/">Get it on F-Droid</a>
           <span class="release"><img src="github.svg" alt="">Alpha 0.1.0</span>
         </div>
       </div>
